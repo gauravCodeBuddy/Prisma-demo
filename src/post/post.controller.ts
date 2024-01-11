@@ -1,24 +1,32 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { PostService } from './post.service';
+import CreatePostDto from './dto/createPost.body.dto';
 
-@Controller()
+@Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  
   @Post()
-  createPost(@Body('title') title: string, @Body('body') body: any, @Body('authorId') authorId: string) {
-    return this.postService.createPost(title, body, authorId);
+  createPost(@Body() post: CreatePostDto) {
+    return this.postService.createPost(post);
   }
 
-  @Get()
-  getAllPosts(@Body('filterByAuthorId') filterByAuthorId?: string) {
+  @Get(':filterByAuthorId')
+  getAllPosts(@Param('filterByAuthorId') filterByAuthorId: string) {
     return this.postService.getAllPosts(filterByAuthorId);
   }
 
   @Put(':id')
-  updatePostById(@Param('id') id: string, @Body('title') title: string, @Body('body') body: string) {
-    return this.postService.updatePostById(id, title, body);
+  updatePostById(@Param('id') id: string, @Body() post: CreatePostDto) {
+    return this.postService.updatePostById(id, post);
   }
 
   @Delete(':id')
